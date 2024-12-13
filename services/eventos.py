@@ -17,13 +17,14 @@ db = client.Eventual
 eventos = db.eventos
 
 # GET /eventos
+# GET /eventos
 @eventos_router.get("/", response_model=EventoList)
 def get_eventos(query: EventoQuery = Depends()):
     try:
         eventData = eventos.find(query.model_dump(exclude_none=True))
         if eventData is None:
             raise HTTPException(status_code=404, detail="No se encontraron eventos")
-        eventosList = EventoList(eventos=[evento.Evento(**evento) for evento in eventData])
+        eventosList = EventoList(eventos=[Evento(**evento) for evento in eventData])
         return eventosList
     except Exception as e:
         raise HTTPException(
